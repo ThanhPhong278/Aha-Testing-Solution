@@ -1,5 +1,8 @@
+using Newtonsoft.Json;
+using Salon_Admin.Hooks;
 using Salon_Admin.Pages;
 using System;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Salon_Admin.Tests.Steps
@@ -8,39 +11,44 @@ namespace Salon_Admin.Tests.Steps
     public class LoginTestStepDefinitions
     {
         private readonly LoginPage _loginPage;
+        private readonly Salon_Admin.Utils.JsonReader _jsonReader;
 
-        public LoginTestStepDefinitions(LoginPage loginPage)
+        public LoginTestStepDefinitions()
         {
-            _loginPage = loginPage;
-        }
-        [Given(@"the user navigates to the application")]
-        public void GivenTheUserNavigatesToTheApplication()
-        {
-            throw new PendingStepException();
+            _loginPage = new LoginPage(HookUI.Page);
+            _jsonReader = new Salon_Admin.Utils.JsonReader();
         }
 
-        [Given(@"the user enters the username from test data")]
-        public void GivenTheUserEntersTheUsernameFromTestData()
+        [Given("the user navigates to the application")]
+        public async Task GivenTheUserNavigatesToTheApplication()
         {
-            throw new PendingStepException();
+            var baseUrl = _jsonReader.GetEnvironmentConfig("BaseUrl");
+            await HookUI.Page.GotoAsync(baseUrl);
         }
 
-        [Given(@"the user enters the password from test data")]
-        public void GivenTheUserEntersThePasswordFromTestData()
+        [Given("the user enters the username from test data")]
+        public async Task GivenTheUserEntersTheUsernameFromTestData()
         {
-            throw new PendingStepException();
+            var username = _jsonReader.GetLoginData("username");
+            await _loginPage.EnterUserNameAsync(username);
         }
 
-        [When(@"the user clicks on the login button")]
-        public void WhenTheUserClicksOnTheLoginButton()
+        [Given("the user enters the password from test data")]
+        public async Task GivenTheUserEntersThePasswordFromTestData()
         {
-            throw new PendingStepException();
+            var password = _jsonReader.GetLoginData("password");
+            await _loginPage.EnterPasswordAsync(password);
         }
 
-        [Then(@"the login should be successful")]
-        public void ThenTheLoginShouldBeSuccessful()
+        [When("the user clicks on the login button")]
+        public async Task WhenTheUserClicksOnTheLoginButton()
         {
-            throw new PendingStepException();
+            await _loginPage.ClickLoginButtonAsync();
+        }
+
+        [Then("the login should be successful")]
+        public async Task ThenTheLoginShouldBeSuccessful()
+        {
         }
     }
 }

@@ -9,11 +9,23 @@ namespace Salon_Admin.Utils
 {
     public class JsonReader
     {
-        public static JObject GetConfiguration()
+        private readonly JObject _environmentConfig;
+        private readonly JObject _loginData;
+
+        public JsonReader()
         {
-            var jsonPath = $"Config/EnvironmentTesting.json";
-            var jsonText = File.ReadAllText(jsonPath);
-            return JObject.Parse(jsonText);
+            _environmentConfig = JObject.Parse(File.ReadAllText("Config/EnvironmentTesting.json"));
+            _loginData = JObject.Parse(File.ReadAllText("Data/loginData.json"));
+        }
+
+        public string GetEnvironmentConfig(string key)
+        {
+            return _environmentConfig[key]?.ToString();
+        }
+
+        public string GetLoginData(string key)
+        {
+            return _loginData[key]?.ToString();
         }
     }
 }

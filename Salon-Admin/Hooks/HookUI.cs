@@ -13,23 +13,36 @@ namespace Salon_Admin.Hooks
     [Binding]
     public class HookUI
     {
-        private readonly ScenarioContext _scenarioContext;
-        private readonly IPlaywright _playwright;
-        private readonly IBrowser _browser;
-        private IPage _page;
-        private readonly LoginPage _loginPage;
-        public HookUI(ScenarioContext scenarioContext, IPlaywright playwright, IBrowser browser, IPage page, LoginPage loginPage)
+        public static IPlaywright Playwright { get; private set; }
+        public static IBrowser Browser { get; private set; }
+        public static IBrowserContext Context { get; private set; }
+        public static IPage Page { get; private set; }
+
+        [BeforeScenario]
+        public async Task BeforeScenario()
         {
-            _scenarioContext = scenarioContext;
-            _playwright = playwright;
-            _browser = browser;
-            _page = page;
-            _loginPage = loginPage;
+            try
+            {
+                Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
+                Browser = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
+                Context = await Browser.NewContextAsync();
+                Page = await Context.NewPageAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in BeforeScenario: {ex.Message}");
+                throw; 
+            }
         }
-        [BeforeTestRun]
-        public async Task BeforeAll()
+
+        [AfterScenario]
+        public async Task AfterScenario()
         {
-            
+            if (Browser != null)
+            {
+                await Browser.CloseAsync();
+                Playwright.Dispose();
+            }
         }
-    }   
+    }
 }
