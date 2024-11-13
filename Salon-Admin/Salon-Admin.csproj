@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Salon_Admin</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -32,12 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Config\" />
-    <Folder Include="Data\" />
-    <Folder Include="Hooks\" />
-    <Folder Include="Utils\" />
     <Folder Include="Tests\Features\" />
-    <Folder Include="Tests\Steps\" />
   </ItemGroup>
 
 </Project>
